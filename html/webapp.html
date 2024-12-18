@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDS Mission Guessing Game</title>
+    <link rel="stylesheet" href="/css/webappstyles.css">
+
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .hint {
+            margin: 20px 0;
+        }
+        .input-section {
+            margin: 10px 0;
+        }
+        .input-section input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .input-section button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .image-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess the LDS Mission</h1>
+    <p>Start by guessing the continent. You'll get more hints as you progress!</p>
+    <p>- When you are done and have finished the game you can refresh and play again or you can click the backarrow and go back to the homepage -</p>
+
+    <div id="game">
+        <div class="hint" id="hint">Hint: Guess the continent.</div>
+        <div class="input-section">
+            <input type="text" id="guess" placeholder="Enter your guess here">
+            <button onclick="makeGuess()">Submit</button>
+        </div>
+        <div id="feedback"></div>
+    </div>
+
+    <div class="image-container">
+        <!-- Add your image below -->
+        <img src="/pictures/Worldmap.jpg" alt="World Map">
+    </div>
+
+    <script>
+        // Press the back arrow to return to the homepage (browser feature)
+
+        const missions = [
+            { continent: "Asia", country: "Japan", city: "Tokyo", language: "Japanese" },
+            { continent: "South America", country: "Argentina", city: "Buenos Aires", language: "Spanish" },
+            { continent: "North America", country: "United States", city: "Salt Lake City", language: "English" },
+            { continent: "Africa", country: "South Africa", city: "Johannesburg", language: "English" },
+            { continent: "Europe", country: "Italy", city: "Rome", language: "Italian" },
+            { continent: "Australia", country: "Australia", city: "Sydney", language: "English" },
+            { continent: "Australia", country: "Australia", city: "Brisbane", language: "English" }
+        ];
+
+        let currentMission = missions[Math.floor(Math.random() * missions.length)];
+        let step = 0;
+        const steps = ["continent", "country", "city", "language"];
+
+        function makeGuess() {
+            const userGuess = document.getElementById('guess').value.trim();
+            const feedback = document.getElementById('feedback');
+            const hint = document.getElementById('hint');
+
+            if (userGuess.toLowerCase() === currentMission[steps[step]].toLowerCase()) {
+                feedback.innerText = `Correct! The ${steps[step]} is ${currentMission[steps[step]]}.`;
+                step++;
+
+                if (step < steps.length) {
+                    hint.innerText = `Hint: Guess the ${steps[step]}.`;
+                } else {
+                    hint.innerText = `Congratulations! You've guessed the mission: ${currentMission.city}, ${currentMission.country}!`;
+                    document.getElementById('game').style.display = 'none';
+
+                    // Show the image when the game ends
+                    const missionImage = document.getElementById('mission-image');
+                    missionImage.src = `images/${currentMission.city.toLowerCase().replace(/ /g, '_')}.jpg`; // Example file path
+                    missionImage.style.display = 'block';
+                }
+            } else {
+                feedback.innerText = `Incorrect. Try again! Hint: Guess the ${steps[step]}.`;
+            }
+
+            document.getElementById('guess').value = "";
+        }
+    </script>
+</body>
+</html>
+
